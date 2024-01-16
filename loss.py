@@ -24,14 +24,3 @@ class FocalLoss(nn.Module):
             return focal_loss.sum()
         else:
             return focal_loss
-
-# Example usage:
-# Assuming you have a model, criterion = FocalLoss(), and data
-# optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
-
-# Inside your training loop:
-# output = model(input)
-# loss = criterion(output, target)
-# optimizer.zero_grad()
-# loss.backward()
-# optimizer.step()

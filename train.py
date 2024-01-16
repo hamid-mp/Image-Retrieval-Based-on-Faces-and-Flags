@@ -6,7 +6,11 @@ from torch.utils.data import DataLoader
 from models import CreateModel
 from torchvision import transforms as tfs
 from loss import FocalLoss
-BATCH_SIZE = 32
+BATCH_SIZE = 8
+
+
+
+
 EPOCHS = 100
 LR = 0.01
 
@@ -60,29 +64,29 @@ def train(model,
             optimizer.step()
 
 
-    train_loss /= len(train_loader)
-    train_acc /= len(train_loader)
-    print(f'-------[{epoch+1}| {epochs}] --------')
-    print(f"Train Acc: {train_acc} \t Train Loss: {train_loss}")
-    if valid_loader:
-        with torch.inference_mode():
-            valid_loss, valid_acc = 0, 0
+        train_loss /= len(train_loader)
+        train_acc /= len(train_loader)
+        print(f'-------[{epoch+1}| {epochs}] --------')
+        print(f"Train Acc: {train_acc} \t Train Loss: {train_loss}")
+        if valid_loader:
+            with torch.inference_mode():
+                valid_loss, valid_acc = 0, 0
 
-            for x, y in valid_loader:
+                for x, y in valid_loader:
 
-                x, y = x.to(device), y.to(device)
+                    x, y = x.to(device), y.to(device)
 
-                y_pred = model(x)
+                    y_pred = model(x)
 
-                loss = criterion(y_pred, y)
+                    loss = criterion(y_pred, y)
 
-                valid_loss += loss
+                    valid_loss += loss
 
-                valid_acc = (torch.eq(y_pred.argmax(dim=1), y).sum().item() / len(y_pred)) * 100
+                    valid_acc = (torch.eq(y_pred.argmax(dim=1), y).sum().item() / len(y_pred)) * 100
 
-            valid_acc /= len(valid_loader)
-            valid_loss /= len(valid_loader)
-            print(f"Valid Acc: {valid_acc} \t Valid Loss: {valid_loss}\n")
+                valid_acc /= len(valid_loader)
+                valid_loss /= len(valid_loader)
+                print(f"Valid Acc: {valid_acc} \t Valid Loss: {valid_loss}\n")
 
 
 if __name__ == '__main__':
