@@ -4,8 +4,7 @@ import torch.nn as nn
 from torchvision.datasets import ImageFolder
 from models import CreateModel
 from torchvision import transforms as tfs
-
-
+from loss import FocalLoss
 BATCH_SIZE = 32
 EPOCHS = 100
 LR = 0.01
@@ -23,7 +22,7 @@ tfs.Compose([
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = CreateModel('resnet18.a1_in1k', 80).load_model()
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-criterion = nn.CrossEntropyLoss()
+criterion = FocalLoss()
 
 
 
