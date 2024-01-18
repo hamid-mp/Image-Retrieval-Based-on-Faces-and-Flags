@@ -1,5 +1,6 @@
 import torch
-from utils import EarlyStopper
+from pathlib import Path
+from utils import EarlyStopper, save_model
 from tqdm import tqdm
 import torch.nn as nn
 from torchvision.datasets import ImageFolder
@@ -10,9 +11,10 @@ from loss import FocalLoss
 
 # To do:
 # 1- Save Model on performance
-# 2- Add Stopping Criteria
+# 2- Add Stopping Criteria : Done
 # 3- Step LR
 
+(Path(__file__).parent.resolve() / 'weights' ).mkdir(parents=True, exist_ok=True)
 BATCH_SIZE = 8
 EPOCHS = 100
 LR = 0.01
@@ -27,11 +29,12 @@ transforms = tfs.Compose([
 ])
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = CreateModel('resnet18.a1_in1k', 84).load_model()
+MANAGER = CreateModel('resnet18.a1_in1k', 84)
+model = MANAGER.build_model()
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 criterion = FocalLoss()
 
-stopper = EarlyStopper(min_delta=0.02, patience=5)
+stopper = EarlyStopper(model=model, min_delta=0.02, patience=5)
 
 
 train_set = ImageFolder(root='./FlagCrops', transform=transforms)
@@ -45,8 +48,9 @@ def train(model,
           device, stop_criteria):
     
     model = model.to(device)
-
+    
     for epoch in tqdm(range(epochs)):
+        print(f'-------[{epoch+1}|{epochs}] --------')
 
         model.train()
         train_loss = 0
@@ -69,7 +73,7 @@ def train(model,
 
         train_loss /= len(train_loader)
         train_acc /= len(train_loader)
-        print(f'-------[{epoch+1}|{epochs}] --------')
+
         print(f"Train Acc: {train_acc} \t Train Loss: {train_loss}")
         if valid_loader:
             with torch.inference_mode():
@@ -91,9 +95,10 @@ def train(model,
                 valid_loss /= len(valid_loader)
                 print(f"Valid Acc: {valid_acc} \t Valid Loss: {valid_loss}\n")
 
-        if stop_criteria.early_stop():
+        if stop_criteria.early_stop(valid_loss):
             print("Training has been stopped due to early stopping criteria")
             break
+
 
 
 if __name__ == '__main__':
