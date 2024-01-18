@@ -49,7 +49,7 @@ def confusion_matrix(class_names, y_pred_tensor, targets):
         class_names=class_names, # turn the row and column labels into class names
         figsize=(10, 7)
     );
-    fig.savefig('ConfusionMatrix.png')
+    plt.savefig('ConfusionMatrix.png')
 
 
 def training_plots(vloss, vacc, tloss, tacc):
