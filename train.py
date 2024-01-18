@@ -1,6 +1,6 @@
 import torch
 from pathlib import Path
-from utils import EarlyStopper, save_model
+from utils import EarlyStopper, confusion_matrix, training_plots
 from tqdm import tqdm
 import torch.nn as nn
 from torchvision.datasets import ImageFolder
@@ -39,6 +39,9 @@ stopper = EarlyStopper(model=model, min_delta=0.02, patience=5)
 
 train_set = ImageFolder(root='./FlagCrops', transform=transforms)
 train_loader = DataLoader(dataset=train_set, batch_size=BATCH_SIZE, shuffle=True)
+
+
+
 def train(model,
           train_loader,
           valid_loader,
@@ -47,8 +50,13 @@ def train(model,
           criterion,
           device, stop_criteria):
     
+
+    train_loss_hist = []
+    train_acc_hist = []
+    valid_loss_hist = []
+    valid_acc_hist = []
+
     model = model.to(device)
-    
     for epoch in tqdm(range(epochs)):
         print(f'-------[{epoch+1}|{epochs}] --------')
 
@@ -74,7 +82,10 @@ def train(model,
         train_loss /= len(train_loader)
         train_acc /= len(train_loader)
 
+
+
         print(f"Train Acc: {train_acc} \t Train Loss: {train_loss}")
+        model.eval()
         if valid_loader:
             with torch.inference_mode():
                 valid_loss, valid_acc = 0, 0
@@ -89,15 +100,49 @@ def train(model,
 
                     valid_loss += loss
 
-                    valid_acc = (torch.eq(y_pred.argmax(dim=1), y).sum().item() / len(y_pred)) * 100
+                    valid_acc += (torch.eq(y_pred.argmax(dim=1), y).sum().item() / len(y_pred)) * 100
 
                 valid_acc /= len(valid_loader)
                 valid_loss /= len(valid_loader)
                 print(f"Valid Acc: {valid_acc} \t Valid Loss: {valid_loss}\n")
-
+        
+        train_acc_hist.append(train_acc)
+        train_loss_hist.append(train_loss)
+        valid_acc_hist.append(valid_acc)
+        valid_loss_hist.append(valid_loss)
+        
         if stop_criteria.early_stop(valid_loss):
             print("Training has been stopped due to early stopping criteria")
             break
+
+    training_plots(valid_loss_hist,
+                   valid_acc_hist,
+                   train_loss_hist,
+                   train_acc_hist)
+
+def test(model, 
+         test_loader, device):
+    predictions = []
+    targets = []
+    model = model.to(device)
+    with torch.inference_mode():
+        
+        for x, y in test_loader:   
+            x, y = x.to(device) , y.to(device)
+            y_logit = model(x)
+            
+            y_pred = torch.softmax(y_logit, dim=1).argmax(dim=1)
+            predictions.append(y_pred.cpu())
+            targets.append(y.cpu())
+
+    
+    targets = torch.cat(targets)
+    y_pred_tensor = torch.cat(predictions)
+
+    confusion_matrix(84, y_pred_tensor, targets)
+
+            
+
 
 
 
