@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Image Retrieval Based on faces and flags</title>
+    <link type="text/css" href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- start Wrapper -->
+    <div id="wrapper">
+        <!-- start Header -->
+        <header id="header">
+            <span class="avatar"><img src="pics/avatar.jpg" alt="" /></span>
+            <h1>Support Us in github</h1>
+            <h2>curious Programmer</h2>
+        </header>
+        
+        <!-- start Image Section -->
+        <section id="image-section">
+            <div class="image-container">
+                <input type="file" id="image-upload" accept="image/*" style="display: none;" />
+                <label for="image-upload" id="upload-label" class="upload-label">Upload Image</label>
+                <img id="uploaded-image" src="" alt="Uploaded Image" style="display: none; width: 200px; height: 200px; object-fit: cover; border: 1px solid #ddd; margin: 10px;" />
+            </div>
+            
+            <div id="result-container" style="display: none; padding: 10px; border: 1px solid #ccc; margin-top: 10px;">
+                <h3>Results:</h3>
+                <pre id="result-content"></pre>
+            </div>
+        </section>
+
+        <!-- start Main -->
+        <section id="main">
+            <!-- start gallery Thumbnails -->
+            <section class="thumbnails" id="gallery-container">
+                <!-- Thumbnails will be dynamically loaded here -->
+            </section>
+            <!-- end gallery Thumbnails -->
+        </section>
+        <!-- end Main -->
+    </div>
+    <!-- end Wrapper -->
+
+    <section id="main">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.poptrox.min.js"></script>
+        <script src="js/skel.min.js"></script>
+        <script src="js/main.js"></script>
+    </section>
+
+    <script>
+        // Number of images to generate, assuming we have 100 images
+        const imageCount = 100;
+
+        // Get the container div for the gallery
+        const galleryContainer = document.getElementById('gallery-container');
+
+        // Loop through and create the HTML for each image
+        for (let i = 1; i <= imageCount; i++) {
+            // Format the image numbers with leading zeros
+            const num = String(i).padStart(2, '0');
+            
+            // Construct the full image and thumbnail URLs
+            const fullImageSrc = `pics/fulls/${num}.jpg`;
+            const thumbImageSrc = `pics/thumbs/${num}.jpg`;
+
+            // Create the anchor tag and image element
+            const link = document.createElement('a');
+            link.href = fullImageSrc;
+
+            const img = document.createElement('img');
+            img.src = thumbImageSrc;
+            img.alt = `Image ${num}`;
+
+            // Append the image to the link, and the link to the gallery container
+            link.appendChild(img);
+            galleryContainer.appendChild(link);
+        }
+    </script>
+</body>
+</html>
