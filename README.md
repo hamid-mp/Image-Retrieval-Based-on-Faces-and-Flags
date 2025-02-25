@@ -22,8 +22,13 @@ The implemented pipeline consist of multiple stage as can be seen below:
 
 ![demo](./Assets/demo.gif)
 
+## Datasets
 
+There are two dataset for classification and detection tasks, it will be available soon!
 
+## Training Results
+![classification](./Assets/classifier.jpg)
+![detector](./Assets/detector.jpg)
 ## Run Locally
 first of all, install `liveserver` vscode extension on your local machine.
 
