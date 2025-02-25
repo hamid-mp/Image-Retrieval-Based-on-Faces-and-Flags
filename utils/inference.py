@@ -10,7 +10,7 @@ import pandas as pd
 from SearchFunction import searchdb
 class Inference():
 
-    def __init__(self, image, names, feats, db_dir='D:\\Military\\Data\\MyRaw'):
+    def __init__(self, image, names, feats, db_dir='Path/to/Database/images'):
         self.img = np.array(image)
         # self.img = cv2.imread(image)
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
@@ -20,7 +20,7 @@ class Inference():
         self.names = names 
         self.feats = feats
         self.ROOT = Path(db_dir)
-        self.df = pd.read_csv('D:\\Military\\Code\\final\\weights\\image_faces_flags.csv')
+        self.df = pd.read_csv('.\\weights\\image_faces_flags.csv')
     def face_handler(self, boxes):
         font= cv2.FONT_HERSHEY_SIMPLEX
         persons = []
