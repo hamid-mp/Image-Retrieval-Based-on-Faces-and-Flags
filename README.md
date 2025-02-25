@@ -11,7 +11,7 @@ Here for simplicity, we just convert the image search problem to a text-based im
 
 The implemented pipeline consist of multiple stage as can be seen below:
 
-عکس قرار میدهیم
+![pipeline](./Assets/pipeline.png)
 
 - **Detector**: To extract faces and flags from query images
 - **Classifier**: determine the country name of a flag
@@ -20,7 +20,7 @@ The implemented pipeline consist of multiple stage as can be seen below:
 
 ## Demo
 
-![demo](./Assests/demo.mp4)
+![demo](./Assets/demo.gif)
 
 
 
