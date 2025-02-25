@@ -20,7 +20,7 @@ The implemented pipeline consist of multiple stage as can be seen below:
 
 ## Demo
 
-![demo](./Assets/demo.mp4)
+![demo](./Assests/demo.mp4)
 
 
 
