@@ -20,7 +20,8 @@ The implemented pipeline consist of multiple stage as can be seen below:
 
 ## Demo
 
-Insert gif or link to demo
+![demo](./Assets/demo.mp4)
+
 
 
 ## Run Locally
